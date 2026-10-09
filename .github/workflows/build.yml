@@ -1,0 +1,64 @@
+name: Build Luau LSP WASM
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '*.md'
+      - 'LICENSE'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Clean old artifacts
+        run: |
+          rm -f web/public/Luau.LanguageServer.Web.js
+          rm -f web/public/Luau.LanguageServer.Web.wasm
+
+      - name: Build Docker image
+        run: docker build -t emscripten_updated web
+
+      - name: Configure CMake
+        run: |
+          docker run --rm -v $(pwd):/src emscripten_updated \
+            emcmake cmake -S/src -B/src/build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+
+      - name: Build WASM target
+        run: |
+          docker run --rm -v $(pwd):/src emscripten_updated \
+            cmake --build /src/build \
+            --target Luau.LanguageServer.Web \
+            --config Release
+
+      - name: Install web dependencies
+        working-directory: web
+        run: npm install
+
+      - name: Assemble final files
+        run: |
+          cat web/demoprepend.js build/Luau.LanguageServer.Web.js > web/public/Luau.LanguageServer.Web.js
+          cp build/Luau.LanguageServer.Web.wasm web/public/Luau.LanguageServer.Web.wasm
+
+      - name: Upload artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: luau-lsp-wasm
+          path: |
+            web/public/Luau.LanguageServer.Web.js
+            web/public/Luau.LanguageServer.Web.wasm
+          if-no-files-found: error
