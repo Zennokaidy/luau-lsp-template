@@ -1,8 +1,8 @@
 {
-  "@demo/global/myapi": {
-    "documentation": "Example API. Replace with your own."
+  "@demo/global/demo": {
+    "documentation": "A demo global for testing."
   },
-  "@demo/global/myapi.hello": {
-    "documentation": "Returns a greeting."
+  "@demo/global/demo.fake_function": {
+    "documentation": "Takes a composite and returns a composite."
   }
 }
