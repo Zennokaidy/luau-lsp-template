@@ -4,6 +4,8 @@ A template for running [luau-lsp](https://github.com/JohnnyMorganz/luau-lsp) com
 
 Based on [kylerudy-imvu/luau-lsp](https://github.com/kylerudy-imvu/luau-lsp) with build fixes for CMake 4.x.
 
+[View LICENSE](LICENSE.md)
+
 ## Setup
 
 1. Click **Use this template** on GitHub to create your own repo.
@@ -39,3 +41,27 @@ worker.postMessage(JSON.stringify({
 }));
 
 worker.onmessage = (e) => console.log('LSP:', e.data);
+```
+
+## Files to Customize
+
+| File | Purpose |
+|---|---|
+| `web/demoprepend.js` | Replace `Zennokaidy/luau-lsp-template` with your repo path |
+| `web/public/demo.defs.luau` | Your API type declarations |
+| `web/public/demo.docs.json` | Your documentation strings |
+
+## Notes
+
+- Uses `raw.githubusercontent.com` instead of jsDelivr because jsDelivr has a 12-hour cache and does not serve `.wasm` files reliably.
+- The worker is created from a Blob URL to bypass cross-origin restrictions on `new Worker()`.
+- The build requires `CMAKE_POLICY_VERSION_MINIMUM=3.5` for CMake 4.x compatibility.
+
+## Credits
+
+- [JohnnyMorganz/luau-lsp](https://github.com/JohnnyMorganz/luau-lsp) — original language server
+- [kylerudy-imvu/luau-lsp](https://github.com/kylerudy-imvu/luau-lsp) — initial WebAssembly port
+
+## License
+
+MIT — see [LICENSE](LICENSE.md). Original work copyright (c) 2022 JohnnyMorganz.
