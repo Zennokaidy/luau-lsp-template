@@ -18,7 +18,7 @@ Based on [kylerudy-imvu/luau-lsp](https://github.com/kylerudy-imvu/luau-lsp) wit
 ## Browser Usage
 
 ```js
-const LSP_CDN = 'https://raw.githubusercontent.com/SEU_USUARIO/SEU_REPO/main/web/public';
+const LSP_CDN = 'https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/web/public';
 
 const response = await fetch(LSP_CDN + '/Luau.LanguageServer.Web.js');
 const rawText = await response.text();
