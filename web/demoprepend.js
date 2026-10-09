@@ -1,6 +1,6 @@
 var tempDouble, tempI64;
 const PACKAGE_NAME = '@demo';
-const deployDirectory = '/';
+const deployDirectory = 'https://raw.githubusercontent.com/Zennokaidy/luau-lsp-template/main/web/public/';
 const docsJsonFile = 'demo.docs.json';
 const defsLuauFile = 'demo.defs.luau';
 const wasmFile = 'Luau.LanguageServer.Web.wasm';
@@ -20,9 +20,6 @@ const initiateWasm = async function() {
     const declResponse = await declRetrieval;
     const docsContent = await docsResponse.arrayBuffer();
     const declContent = await declResponse.arrayBuffer();
-    // we can mirror a remote workspace within the memory of Emscripten's fake file system like so.
-    // this is potentially the most expedient way to fully integrate the LSP with Monaco.
-    // part of me would like to abstract out the concept of the workspace from the LSP, rather than presume file i/o semantics, this is probably excessive.
     module.FS.createPath('/', 'workspace', true, true);
     module.FS.writeFile('/workspace/empty', '');
     module.FS.createDataFile('/', docsJsonFile, new Uint8Array(docsContent), true, true, true);
@@ -40,7 +37,6 @@ self.onmessage = x => {
 function handleInput(module, languageServer, input) {
     if(typeof input == 'string') {
         languageServer.processInput(input);
-    // an example of how to relay file system changes, should the user 'save' a document.
     } else if(input?.type == 'update') {
         module.FS.writeFile('/workspace/1', input.data);
     }
